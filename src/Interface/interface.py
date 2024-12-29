@@ -1,9 +1,6 @@
-# interface.py
 import pygame
 import sys
-
-from include.jogo_space import Game
-
+from src.Interface.jogo_space import Game
 # Importa a classe Game do arquivo jogo.py
 
 class MainMenu:
