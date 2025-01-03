@@ -9,8 +9,8 @@ class MainMenu:
         pygame.init()
         
         # Configurações de tela
-        self.screen_width = 1920
-        self.screen_height = 1080
+        self.screen_width = 960
+        self.screen_height = 540
         self.screen = pygame.display.set_mode((self.screen_width, self.screen_height))
         pygame.display.set_caption("Battle of Coruscant - Tela Inicial")
         
