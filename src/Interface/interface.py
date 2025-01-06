@@ -1,9 +1,6 @@
-# interface.py
 import pygame
 import sys
-
-from include.jogo_space import Game
-
+from src.Interface.jogo_space import Game
 # Importa a classe Game do arquivo jogo.py
 
 class MainMenu:
@@ -12,13 +9,13 @@ class MainMenu:
         pygame.init()
         
         # Configurações de tela
-        self.screen_width = 1920
-        self.screen_height = 1080
+        self.screen_width = 960
+        self.screen_height = 540
         self.screen = pygame.display.set_mode((self.screen_width, self.screen_height))
         pygame.display.set_caption("Battle of Coruscant - Tela Inicial")
         
         # Carregar imagem de fundo e ajustar ao tamanho da tela
-        self.background_image = pygame.image.load("coruscant.png")
+        self.background_image = pygame.image.load("src/Assents/coruscant.png")
         self.background = pygame.transform.scale(self.background_image, (self.screen_width, self.screen_height))
         
         # Definir cores

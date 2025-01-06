@@ -5,8 +5,8 @@ import sys
 class Game:
     def __init__(self):
         # Configurações do jogo
-        self.screen_width = 1920
-        self.screen_height = 1080
+        self.screen_width = 960
+        self.screen_height = 540
         self.screen = pygame.display.set_mode((self.screen_width, self.screen_height))
         pygame.display.set_caption("Battle of Coruscant - Jogo")
         
