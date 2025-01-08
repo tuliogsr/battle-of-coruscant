@@ -53,3 +53,56 @@ class Nave:
             cor_projetil,
             velocidade_projetil
         )
+
+'''
+
+import pygame
+import sys
+
+from include.laser import Laser
+
+class Nave():
+    cooldown = 30
+    def _init_(self, x, y, saude=100):
+        self.x = x
+        self.y = y
+        self.saude = saude
+        self.nave_img = None
+        self.laser_img = None
+        self.lasers = []
+        self.cooldown_cont = 0
+
+    def draw(self, window):
+        window.blit(self.nave_img,(self.x,self.y))
+        for laser in self.lasers: #fogo amigo permitido para inimigos
+            laser.draw(window)
+
+    def movimento_laser(self, vel, objeto): 
+        self.cooldown()
+        for laser in self.lasers:
+            laser.mover(vel)
+            if laser.sair_tela(height):
+                self.lasers.remove(laser) #laser sai da tela ao não acertar ninguem
+            elif laser.colisao(objeto):
+                objeto.saude -= 10 #a cada dano sofrido, jogador leva 10 de dano
+                self.lasers.remove(laser) #laser sai da tela ao colidir
+    
+    def espera_tiro(self): #cooldown de tiro
+        if self.cooldown_cont >= self.cooldown:
+            self.cooldown_cont = 0
+        elif self.cooldown_cont > 0:
+            self.cooldown_cont += 1
+
+    def tiro(self): #funcionamento do tiro
+        if self.cooldown_cont == 0:
+            laser = Laser(self.x, self.y, self.laser_img)
+            self.lasers.append(laser)
+            self.cooldown_cont = 1
+
+    def get_largura(self):
+        return self.nave_img.get_largura()
+
+    def get_altura(self):
+        return self.nave_img.get_altura()
+
+'''
