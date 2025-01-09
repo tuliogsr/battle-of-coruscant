@@ -1,6 +1,6 @@
 import pygame
-from src.Construindo.Naves import Nave
-from src.Construindo.Laser import Laser
+from src.Naves.NaveBase.Naves import Nave
+from src.Naves.NaveBase.Laser import Laser
 
 class NaveTank(Nave):
     def __init__(self, x, y, largura, altura, cor, velocidade, vida):

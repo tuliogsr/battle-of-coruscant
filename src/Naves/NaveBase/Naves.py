@@ -1,5 +1,5 @@
 import pygame
-from Construindo.Laser import Laser
+from src.Naves.NaveBase.Laser import Laser
 
 class Nave:
     def __init__(self, x, y, largura, altura, cor, velocidade):
