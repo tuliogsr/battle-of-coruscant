@@ -1,5 +1,5 @@
 import pygame
-from src.Naves.NaveBase.Naves import Nave
+from src.Naves.NaveBase.NavePadrao import Nave
 from src.Naves.NaveBase.Laser import Laser
 
 class NaveTank(Nave):
