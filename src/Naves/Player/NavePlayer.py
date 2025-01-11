@@ -1,5 +1,5 @@
 import pygame
-import src.Interface.jogo_space as jogo_space
+import Interface.jogo_space as jogo
 class Player(pygame.sprite.Sprite):
     def __init__(self):
         super().__init__()

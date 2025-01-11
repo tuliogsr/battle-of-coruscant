@@ -1,6 +1,6 @@
 import pygame
 import sys
-from src.Interface.jogo_space import Game
+from Interface.jogo_space import Game
 
 class MainMenu:
     def __init__(self):
