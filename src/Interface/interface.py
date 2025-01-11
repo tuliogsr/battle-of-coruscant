@@ -13,7 +13,7 @@ class MainMenu:
         pygame.display.set_caption("Battle of Coruscant - Tela Inicial")
         
         # Carregar e ajustar imagem de fundo
-        self.background_image = pygame.image.load("src/Assents/coruscant.png")
+        self.background_image = pygame.image.load("Assents/coruscant.png")
         # Preservar a proporção da imagem ao redimensionar
         img_ratio = self.background_image.get_width() / self.background_image.get_height()
         new_height = self.screen_height
