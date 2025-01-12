@@ -15,7 +15,7 @@ def run_game():
     ai_settings = Settings()
     screen = pygame.display.set_mode(
         (ai_settings.screen_width, ai_settings.screen_height))
-    pygame.display.set_caption("Alien Invasion")
+    pygame.display.set_caption("Battle of Coruscant")
     
     # Make the Play button.
     play_button = Button(ai_settings, screen, "Play")
@@ -71,12 +71,10 @@ class MainMenu:
         pygame.init()
         
         # Configurações de tela
-        self.screen_width = 1200
-        self.screen_height = 800
+        self.screen_width = 920
+        self.screen_height = 540
         self.screen = pygame.display.set_mode((self.screen_width, self.screen_height))
-        pygame.display.set_caption("Alien Invasion - Menu Principal")
-        
-        #self.background_image = pygame.image.load("Assents/coruscant.png")
+        pygame.display.set_caption("Battle of Coruscant - Menu Principal")
         
         # Definir cores
         self.WHITE = (255, 255, 255)
@@ -92,7 +90,7 @@ class MainMenu:
         self.warning_font = pygame.font.Font(None, 36)
         
         # Titulo do jogo
-        title_text = "Alien Invasion"
+        title_text = "Battle of Coruscant"
         title_surface = self.title_font.render(title_text, True, self.ORANGE)
         title_width = title_surface.get_width()
         self.title_x = (self.screen_width - title_width) // 2
@@ -193,7 +191,7 @@ class MainMenu:
         # Initialize game components
         ai_settings = Settings()
         screen = pygame.display.set_mode((ai_settings.screen_width, ai_settings.screen_height))
-        pygame.display.set_caption("Alien Invasion")
+        pygame.display.set_caption("Battle of Coruscant")
         
         play_button = Button(ai_settings, screen, "Play")
         stats = GameStats(ai_settings)
@@ -226,7 +224,7 @@ class MainMenu:
             self.screen.fill(self.BLACK)
             
             # Desenhar o título centralizado
-            self.draw_outlined_text("Alien Invasion", self.title_font, self.ORANGE, self.BLACK, 
+            self.draw_outlined_text("Battle of Coruscant", self.title_font, self.ORANGE, self.BLACK, 
                                   self.screen, self.title_x, self.title_y)
             
             self.draw_input_box()
