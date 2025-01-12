@@ -1,5 +1,6 @@
 import pygame
 import sys
+import json
 from Interface.jogo_space import Game
 
 class MainMenu:
@@ -127,6 +128,40 @@ class MainMenu:
                 pygame.draw.line(self.screen, self.BLACK,
                                (cursor_pos, self.input_box.y + 10),
                                (cursor_pos, self.input_box.y + self.input_box.height - 10))
+
+def save_score(self, nickname, score):
+    """
+    Salva o nickname do jogador e sua maior pontuação em um arquivo.
+    
+    Args:
+        nickname (str): O nickname do jogador.
+        score (int): A pontuação do jogador.
+    """
+    # Nome do arquivo para armazenar os dados
+    file_name = "player_scores.json"
+    
+    try:
+        # Tentar carregar os dados existentes
+        with open(file_name, "r") as file:
+            data = json.load(file)
+    except (FileNotFoundError, json.JSONDecodeError):
+        # Caso o arquivo não exista ou esteja corrompido, criar um novo dicionário
+        data = {}
+    
+    # Atualizar ou adicionar o recorde do jogador
+    if nickname in data:
+        # Salvar apenas se a nova pontuação for maior
+        if score > data[nickname]:
+            data[nickname] = score
+    else:
+        # Adicionar novo jogador
+        data[nickname] = score
+    
+    # Salvar os dados atualizados no arquivo
+    with open(file_name, "w") as file:
+        json.dump(data, file, indent=4)
+    
+    print(f"Pontuação salva: {nickname} - {score}")
     
     def run(self):
         while True:
@@ -157,6 +192,13 @@ class MainMenu:
                         if self.input_text.strip():
                             game = Game()
                             game.start()
+                            if self.input_text.strip():
+                                game = Game()
+                                final_score = game.start()  # Modifique o método `start` para retornar a pontuação final.
+                                self.save_score(self.input_text.strip(), final_score)  # Salvar o nickname e a pontuação.
+                            else:
+                                self.show_warning = True
+                                self.warning_timer = pygame.time.get_ticks()
                         else:
                             self.show_warning = True
                             self.warning_timer = pygame.time.get_ticks()
