@@ -119,15 +119,18 @@ def check_high_score(stats, sb):
 def check_bullet_alien_collisions(ai_settings, screen, stats, sb, ship,
         aliens, bullets):
     """Respond to bullet-alien collisions."""
-    # Remove any bullets and aliens that have collided.
-    collisions = pygame.sprite.groupcollide(bullets, aliens, True, True)
-    
+    collisions = pygame.sprite.groupcollide(bullets, aliens, True, False)
+
     if collisions:
-        for aliens in collisions.values():
-            stats.score += ai_settings.alien_points * len(aliens)
-            sb.prep_score()
+        for aliens_hit in collisions.values():
+            for alien in aliens_hit:
+                alien.health -= 1
+                if alien.health <= 0:
+                    aliens.remove(alien)
+                    stats.score += ai_settings.alien_points
+                    sb.prep_score()
         check_high_score(stats, sb)
-    
+
     if len(aliens) == 0:
         # If the entire fleet is destroyed, start a new level.
         bullets.empty()
@@ -216,7 +219,8 @@ def get_number_rows(ai_settings, ship_height, alien_height):
     
 def create_alien(ai_settings, screen, aliens, alien_number, row_number):
     """Create an alien, and place it in the row."""
-    alien = Alien(ai_settings, screen)
+    alien_type = (row_number % 3) + 1  # Cycle through alien types
+    alien = Alien(ai_settings, screen, alien_type)
     alien_width = alien.rect.width
     alien.x = alien_width + 2 * alien_width * alien_number
     alien.rect.x = alien.x

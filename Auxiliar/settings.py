@@ -19,6 +19,8 @@ class Settings():
         
         # Alien settings.
         self.fleet_drop_speed = 10
+        self.alien_speed_factors = [1, 1.5, 2]  # Different speeds for different types
+        self.alien_health = [1, 2, 3]  # Different health for different types
             
         # How quickly the game speeds up.
         self.speedup_scale = 1.1
