@@ -1,60 +1,3 @@
-'''
-import pygame
-from pygame.sprite import Group
-
-from settings import Settings
-from game_stats import GameStats
-from scoreboard import Scoreboard
-from button import Button
-from ship import Ship
-import game_functions as gf
-
-def run_game():
-    # Initialize pygame, settings, and screen object.
-    pygame.init()
-    ai_settings = Settings()
-    screen = pygame.display.set_mode(
-        (ai_settings.screen_width, ai_settings.screen_height))
-    pygame.display.set_caption("Battle of Coruscant")
-    
-    # Make the Play button.
-    play_button = Button(ai_settings, screen, "Play")
-    
-    # Create an instance to store game statistics, and a scoreboard.
-    stats = GameStats(ai_settings)
-    sb = Scoreboard(ai_settings, screen, stats)
-    
-    # Set the background color.
-    bg_color = (230, 230, 230)
-    
-    # Make a ship, a group of bullets, and a group of aliens.
-    ship = Ship(ai_settings, screen)
-    bullets = Group()
-    aliens = Group()
-    
-    # Create the fleet of aliens.
-    gf.create_fleet(ai_settings, screen, ship, aliens)
-
-    # Start the main loop for the game.
-
-    while True:
-        gf.check_events(ai_settings, screen, stats, sb, play_button, ship,
-            aliens, bullets)
-        
-        if stats.game_active:
-            ship.update()
-            gf.update_bullets(ai_settings, screen, stats, sb, ship, aliens,
-                bullets)
-            gf.update_aliens(ai_settings, screen, stats, sb, ship, aliens,
-                bullets)
-        
-        gf.update_screen(ai_settings, screen, stats, sb, ship, aliens,
-            bullets, play_button)
-
-run_game()
-
-'''
-
 import pygame
 import sys
 import json
@@ -64,7 +7,44 @@ from game_stats import GameStats
 from scoreboard import Scoreboard
 from button import Button
 from ship import Ship
-import game_functions as gf
+from game_functions import GameFunctions as gf
+
+class AlienInvasion:
+    def __init__(self):
+        """Initialize the game, and create game resources."""
+        pygame.init()
+        self.ai_settings = Settings()
+        self.screen = pygame.display.set_mode(
+            (self.ai_settings.screen_width, self.ai_settings.screen_height))
+        pygame.display.set_caption("Battle of Coruscant")
+        
+        # Make the Play button.
+        self.play_button = Button(self.ai_settings, self.screen, "Play")
+        
+        # Create an instance to store game statistics, and a scoreboard.
+        self.stats = GameStats(self.ai_settings)
+        self.stats.load_high_score()
+        self.sb = Scoreboard(self.ai_settings, self.screen, self.stats)
+        
+        # Make a ship, a group of bullets, and a group of aliens.
+        self.ship = Ship(self.ai_settings, self.screen)
+        self.bullets = Group()
+        self.aliens = Group()
+        
+        # Create the fleet of aliens.
+        gf.create_fleet(self.ai_settings, self.screen, self.ship, self.aliens)
+
+    def run_game(self):
+        """Start the main loop for the game."""
+        while True:
+            gf.check_events(self.ai_settings, self.screen, self.stats, self.sb, self.play_button, self.ship, self.aliens, self.bullets)
+            
+            if self.stats.game_active:
+                self.ship.update()
+                gf.update_bullets(self.ai_settings, self.screen, self.stats, self.sb, self.ship, self.aliens, self.bullets)
+                gf.update_aliens(self.ai_settings, self.screen, self.stats, self.sb, self.ship, self.aliens, self.bullets)
+            
+            gf.update_screen(self.ai_settings, self.screen, self.stats, self.sb, self.ship, self.aliens, self.bullets, self.play_button)
 
 class MainMenu:
     def __init__(self):
@@ -75,6 +55,11 @@ class MainMenu:
         self.screen_height = 540
         self.screen = pygame.display.set_mode((self.screen_width, self.screen_height))
         pygame.display.set_caption("Battle of Coruscant - Menu Principal")
+        
+        #Background
+        self.bg_image = pygame.image.load('ZCorus/Auxiliar/Assents/coruscant.png')
+        self.bg = pygame.transform.scale(self.bg_image, (self.screen_width, self.screen_height))
+        
         
         # Definir cores
         self.WHITE = (255, 255, 255)
@@ -188,40 +173,16 @@ class MainMenu:
             json.dump(data, file, indent=4)
 
     def start_game(self):
-        # Initialize game components
-        ai_settings = Settings()
-        screen = pygame.display.set_mode((ai_settings.screen_width, ai_settings.screen_height))
-        pygame.display.set_caption("Battle of Coruscant")
-        
-        play_button = Button(ai_settings, screen, "Play")
-        stats = GameStats(ai_settings)
-        sb = Scoreboard(ai_settings, screen, stats)
-        ship = Ship(ai_settings, screen)
-        bullets = Group()
-        aliens = Group()
-        
-        gf.create_fleet(ai_settings, screen, ship, aliens)
-        
-        # Game loop
-        while True:
-            gf.check_events(ai_settings, screen, stats, sb, play_button, ship, aliens, bullets)
-            
-            if stats.game_active:
-                ship.update()
-                gf.update_bullets(ai_settings, screen, stats, sb, ship, aliens, bullets)
-                gf.update_aliens(ai_settings, screen, stats, sb, ship, aliens, bullets)
-            
-            gf.update_screen(ai_settings, screen, stats, sb, ship, aliens, bullets, play_button)
-            
-            # Se o jogo terminar, retornar a pontuação
-            if not stats.game_active and not stats.ships_left:
-                return stats.score
+        ai = AlienInvasion()
+        ai.run_game()
+        return ai.stats.score
     
     def run(self):
         clock = pygame.time.Clock()
         
         while True:
-            self.screen.fill(self.BLACK)
+            
+            self.screen.blit(self.bg, (0, 0))
             
             # Desenhar o título centralizado
             self.draw_outlined_text("Battle of Coruscant", self.title_font, self.ORANGE, self.BLACK, 
