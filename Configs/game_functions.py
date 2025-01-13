@@ -92,10 +92,8 @@ class GameFunctions:
         """Update images on the screen, and flip to the new screen."""
         # Desenhar a imagem de fundo
         background_image = pygame.image.load('Assents/background.png')
+        background_image = pygame.transform.scale(background_image, (ai_settings.screen_width, ai_settings.screen_height))
         screen.blit(background_image, (0, 0))
-
-        # Redraw the screen, each pass through the loop.
-        screen.fill(ai_settings.bg_color)
 
         # Redraw all bullets, behind ship and aliens.
         for bullet in bullets.sprites():

@@ -38,6 +38,7 @@ class AlienInvasion:
         gf.create_fleet(self.ai_settings, self.screen, self.ship, self.aliens)
 
         self.background_image = pygame.image.load('Assents/background.png')
+        self.background_image = pygame.transform.scale(self.background_image, (self.ai_settings.screen_width, self.ai_settings.screen_height))
 
     def run_game(self):
         """Start the main loop for the game."""
@@ -48,6 +49,9 @@ class AlienInvasion:
                 self.ship.update()
                 gf.update_bullets(self.ai_settings, self.screen, self.stats, self.sb, self.ship, self.aliens, self.bullets)
                 gf.update_aliens(self.ai_settings, self.screen, self.stats, self.sb, self.ship, self.aliens, self.bullets)
+            
+            # Desenhar a imagem de fundo
+            self.screen.blit(self.background_image, (0, 0))
             
             gf.update_screen(self.ai_settings, self.screen, self.stats, self.sb, self.ship, self.aliens, self.bullets, self.play_button)
 
