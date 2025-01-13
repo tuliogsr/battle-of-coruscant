@@ -48,6 +48,42 @@ class AlienInvasion:
 
             if not self.stats.game_active and self.stats.score > 0:
                 gf.save_score(self.stats.nickname, self.stats.score)
+                self.show_end_screen()
+
+    def show_end_screen(self):
+        """Show the end screen with the option to return to the main menu."""
+        # Desenhar o texto "Fim de Jogo"
+        font = pygame.font.Font(None, 74)
+        text = font.render("Fim de Jogo", True, (255, 0, 0))
+        text_rect = text.get_rect(center=(self.ai_settings.screen_width // 2, self.ai_settings.screen_height // 2 - 50))
+        self.screen.blit(text, text_rect)
+
+        # Configurações do botão
+        button_font = pygame.font.Font(None, 50)
+        button_text = button_font.render("Voltar ao Menu", True, (255, 255, 255))
+        button_rect = button_text.get_rect(center=(self.ai_settings.screen_width // 2, self.ai_settings.screen_height // 2 + 50))
+        
+        # Cor do botão
+        button_color = (255, 165, 0)  
+        # Desenhar o retângulo de fundo do botão
+        pygame.draw.rect(self.screen, button_color, button_rect.inflate(20, 10))  # Inflate para ajustar o tamanho do retângulo
+
+        # Renderizar o texto do botão sobre o retângulo
+        self.screen.blit(button_text, button_rect)
+
+        pygame.display.flip()
+
+        waiting = True
+        while waiting:
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    sys.exit()
+                elif event.type == pygame.MOUSEBUTTONDOWN:
+                    if button_rect.collidepoint(event.pos):
+                        waiting = False
+                        main_menu = MainMenu()
+                        main_menu.run()
 
 class MainMenu:
     def __init__(self):
