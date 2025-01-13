@@ -2,12 +2,12 @@ import pygame
 import sys
 import json
 from pygame.sprite import Group
-from settings import Settings
-from game_stats import GameStats
-from scoreboard import Scoreboard
-from button import Button
-from ship import Ship
-from game_functions import GameFunctions as gf
+from Configs.settings import Settings
+from Recorde.game_stats import GameStats
+from Recorde.scoreboard import Scoreboard
+from Configs.button import Button
+from Construindo.ship import Ship
+from Configs.game_functions import GameFunctions as gf
 
 class AlienInvasion:
     def __init__(self):
@@ -258,7 +258,3 @@ class MainMenu:
             
             pygame.display.flip()
             clock.tick(60)
-
-if __name__ == '__main__':
-    menu = MainMenu()
-    menu.run()

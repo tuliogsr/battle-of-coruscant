@@ -1,11 +1,11 @@
 from pygame.sprite import Sprite
-from game_object import GameObject
+from Construindo.game_object import GameObject
 
 class Alien(GameObject):
     """Classe para representar um alienígena."""
 
     def __init__(self, ai_settings, screen):
-        super(Alien, self).__init__('images/alien.bmp', screen)
+        super(Alien, self).__init__('Assents/alien.bmp', screen)
         self.ai_settings = ai_settings
 
         # Posição inicial do alienígena.

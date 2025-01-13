@@ -1,12 +1,12 @@
 import pygame
 from pygame.sprite import Sprite
-from game_object import GameObject
+from Construindo.game_object import GameObject
 
 class Ship(GameObject):
     """Classe para representar a nave do jogador."""
 
     def __init__(self, ai_settings, screen):
-        super(Ship, self).__init__('images/ship.bmp', screen)
+        super(Ship, self).__init__('Assents/ship.bmp', screen)
         self.ai_settings = ai_settings
 
         # Configuração inicial da nave.

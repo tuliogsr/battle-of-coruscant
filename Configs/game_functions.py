@@ -1,8 +1,8 @@
 import sys
 from time import sleep
 import pygame
-from bullet import Bullet
-from alien import Alien
+from Construindo.bullet import Bullet
+from Construindo.alien import Alien
 import json
 
 class GameFunctions:
