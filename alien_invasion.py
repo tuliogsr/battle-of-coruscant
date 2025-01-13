@@ -90,8 +90,8 @@ class MainMenu:
         pygame.init()
         
         # Configurações de tela
-        self.screen_width = 920
-        self.screen_height = 540
+        self.screen_width = 1000
+        self.screen_height = 560
         self.screen = pygame.display.set_mode((self.screen_width, self.screen_height))
         pygame.display.set_caption("Battle of Coruscant - Menu Principal")
         
@@ -99,6 +99,9 @@ class MainMenu:
         self.bg_image = pygame.image.load('Assents/coruscant.png')
         self.bg = pygame.transform.scale(self.bg_image, (self.screen_width, self.screen_height))
         
+        # Background para a tela de recordes
+        self.high_scores_bg_image = pygame.image.load('Assents/high_scores_bg.bmp')
+        self.high_scores_bg = pygame.transform.scale(self.high_scores_bg_image, (self.screen_width, self.screen_height))
         
         # Definir cores
         self.WHITE = (255, 255, 255)
@@ -266,13 +269,15 @@ class MainMenu:
                         
                         high_scores.sort(key=lambda x: x[1], reverse=True)
                         
-                        self.screen.fill(self.BLACK)
+                        self.screen.blit(self.high_scores_bg, (0, 0))  # Exibir a imagem de fundo
                         self.draw_text("Recordes", self.title_font, self.ORANGE, self.screen, self.screen_width // 2, 50)
-                        y = 100
-                        for i, (name, score) in enumerate(high_scores[:10], 1):
+                        y = 150  # Aumentar o espaço inicial
+                        for i, (name, score) in enumerate(high_scores[:5], 1):  # Mostrar apenas os 5 melhores
                             text = f"{i}. {name}: {score}"
-                            self.draw_text(text, self.button_font, self.WHITE, self.screen, self.screen_width // 2, y)
-                            y += 50
+                            text_surface = self.button_font.render(text, True, self.WHITE)
+                            text_rect = text_surface.get_rect(center=(self.screen_width // 2, y))
+                            self.screen.blit(text_surface, text_rect)
+                            y += 70  # Aumentar o espaço entre cada usuário
                         pygame.display.flip()
                         pygame.time.wait(5000)
                         self.screen.blit(self.bg, (0, 0))

@@ -275,11 +275,11 @@ class GameFunctions:
         except (FileNotFoundError, json.JSONDecodeError):
             data = {}
 
-        if nickname in data:
-            if score > data[nickname]:
-                data[nickname] = score
-        else:
-            data[nickname] = score
+        data[nickname] = max(score, data.get(nickname, 0))
+
+        # Manter apenas os 5 melhores scores
+        top_scores = sorted(data.items(), key=lambda x: x[1], reverse=True)[:5]
+        data = {k: v for k, v in top_scores}
 
         with open(file_name, "w") as file:
             json.dump(data, file, indent=4)
