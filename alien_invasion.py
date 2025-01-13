@@ -1,34 +1,65 @@
 import pygame
 import sys
 import json
-from Interface.jogo_space import Game
+from pygame.sprite import Group
+from settings import Settings
+from game_stats import GameStats
+from scoreboard import Scoreboard
+from button import Button
+from ship import Ship
+from game_functions import GameFunctions as gf
+
+class AlienInvasion:
+    def __init__(self):
+        """Initialize the game, and create game resources."""
+        pygame.init()
+        self.ai_settings = Settings()
+        self.screen = pygame.display.set_mode(
+            (self.ai_settings.screen_width, self.ai_settings.screen_height))
+        pygame.display.set_caption("Battle of Coruscant")
+        
+        # Make the Play button.
+        self.play_button = Button(self.ai_settings, self.screen, "Play")
+        
+        # Create an instance to store game statistics, and a scoreboard.
+        self.stats = GameStats(self.ai_settings)
+        self.stats.load_high_score()
+        self.sb = Scoreboard(self.ai_settings, self.screen, self.stats)
+        
+        # Make a ship, a group of bullets, and a group of aliens.
+        self.ship = Ship(self.ai_settings, self.screen)
+        self.bullets = Group()
+        self.aliens = Group()
+        
+        # Create the fleet of aliens.
+        gf.create_fleet(self.ai_settings, self.screen, self.ship, self.aliens)
+
+    def run_game(self):
+        """Start the main loop for the game."""
+        while True:
+            gf.check_events(self.ai_settings, self.screen, self.stats, self.sb, self.play_button, self.ship, self.aliens, self.bullets)
+            
+            if self.stats.game_active:
+                self.ship.update()
+                gf.update_bullets(self.ai_settings, self.screen, self.stats, self.sb, self.ship, self.aliens, self.bullets)
+                gf.update_aliens(self.ai_settings, self.screen, self.stats, self.sb, self.ship, self.aliens, self.bullets)
+            
+            gf.update_screen(self.ai_settings, self.screen, self.stats, self.sb, self.ship, self.aliens, self.bullets, self.play_button)
 
 class MainMenu:
     def __init__(self):
         pygame.init()
         
         # Configurações de tela
-        self.screen_width = 960
+        self.screen_width = 920
         self.screen_height = 540
         self.screen = pygame.display.set_mode((self.screen_width, self.screen_height))
-        pygame.display.set_caption("Battle of Coruscant - Tela Inicial")
+        pygame.display.set_caption("Battle of Coruscant - Menu Principal")
         
-        # Carregar e ajustar imagem de fundo
-        self.background_image = pygame.image.load("Assents/coruscant.png")
-        # Preservar a proporção da imagem ao redimensionar
-        img_ratio = self.background_image.get_width() / self.background_image.get_height()
-        new_height = self.screen_height
-        new_width = int(new_height * img_ratio)
+        #Background
+        self.bg_image = pygame.image.load('Assents/coruscant.png')
+        self.bg = pygame.transform.scale(self.bg_image, (self.screen_width, self.screen_height))
         
-        if new_width < self.screen_width:
-            new_width = self.screen_width
-            new_height = int(new_width / img_ratio)
-            
-        self.background = pygame.transform.scale(self.background_image, (new_width, new_height))
-        
-        # Calcular posição para centralizar a imagem
-        self.bg_x = (self.screen_width - new_width) // 2
-        self.bg_y = (self.screen_height - new_height) // 2
         
         # Definir cores
         self.WHITE = (255, 255, 255)
@@ -58,13 +89,13 @@ class MainMenu:
         # Configuração da caixa de entrada do nickname
         self.input_text = ""
         self.input_active = False
-        self.placeholder = "Nickname"
+        self.placeholder = "Digite seu nome"
         
         # Configuração do aviso
         self.show_warning = False
         self.warning_timer = 0
         self.warning_duration = 2000  # 2 segundos
-        
+
     def draw_outlined_text(self, text, font, text_color, outline_color, surface, x, y):
         outline_width = 2
         for dx in range(-outline_width, outline_width + 1):
@@ -91,7 +122,7 @@ class MainMenu:
         if self.show_warning:
             current_time = pygame.time.get_ticks()
             if current_time - self.warning_timer < self.warning_duration:
-                warning_text = "Digite um nickname!"
+                warning_text = "Digite seu nome para começar!"
                 text_surface = self.warning_font.render(warning_text, True, self.RED)
                 text_rect = text_surface.get_rect(center=(self.screen_width // 2, self.input_box.y - 20))
                 self.screen.blit(text_surface, text_rect)
@@ -99,28 +130,23 @@ class MainMenu:
                 self.show_warning = False
     
     def draw_input_box(self):
-        # Desenhar a caixa arredondada com borda vermelha se mostrar aviso
         border_color = self.RED if self.show_warning else self.WHITE
         pygame.draw.rect(self.screen, border_color, self.input_box, border_radius=20)
         
-        # Se não há texto e a caixa não está ativa, mostrar o placeholder
         if not self.input_text and not self.input_active:
             placeholder_surface = self.input_font.render(self.placeholder, True, self.GRAY)
             placeholder_rect = placeholder_surface.get_rect(center=self.input_box.center)
             self.screen.blit(placeholder_surface, placeholder_rect)
         else:
-            # Renderizar o texto dentro da caixa
             text_surface = self.input_font.render(self.input_text, True, self.BLACK)
             text_rect = text_surface.get_rect(center=self.input_box.center)
             
-            # Garantir que o texto não ultrapasse a caixa
             if text_rect.width > self.input_box.width - 20:
                 text_rect.x = self.input_box.x + 10
                 text_rect.y = self.input_box.y + (self.input_box.height - text_rect.height) // 2
             
             self.screen.blit(text_surface, text_rect)
             
-            # Desenhar cursor quando ativo
             if self.input_active and pygame.time.get_ticks() % 1000 < 500:
                 cursor_pos = text_rect.right
                 if cursor_pos > self.input_box.right - 10:
@@ -130,43 +156,33 @@ class MainMenu:
                                (cursor_pos, self.input_box.y + self.input_box.height - 10))
 
     def save_score(self, nickname, score):
-        """
-        Salva o nickname do jogador e sua maior pontuação em um arquivo.
-        
-        Args:
-            nickname (str): O nickname do jogador.
-            score (int): A pontuação do jogador.
-        """
-        # Nome do arquivo para armazenar os dados
         file_name = "player_scores.json"
-        
         try:
-            # Tentar carregar os dados existentes
             with open(file_name, "r") as file:
                 data = json.load(file)
         except (FileNotFoundError, json.JSONDecodeError):
-            # Caso o arquivo não exista ou esteja corrompido, criar um novo dicionário
             data = {}
         
-        # Atualizar ou adicionar o recorde do jogador
         if nickname in data:
-            # Salvar apenas se a nova pontuação for maior
             if score > data[nickname]:
                 data[nickname] = score
         else:
-            # Adicionar novo jogador
             data[nickname] = score
         
-        # Salvar os dados atualizados no arquivo
         with open(file_name, "w") as file:
             json.dump(data, file, indent=4)
-        
-        print(f"Pontuação salva: {nickname} - {score}")
-        
+
+    def start_game(self):
+        ai = AlienInvasion()
+        ai.run_game()
+        return ai.stats.score
+    
     def run(self):
+        clock = pygame.time.Clock()
+        
         while True:
-            # Desenhar o fundo
-            self.screen.blit(self.background, (self.bg_x, self.bg_y))
+            
+            self.screen.blit(self.bg, (0, 0))
             
             # Desenhar o título centralizado
             self.draw_outlined_text("Battle of Coruscant", self.title_font, self.ORANGE, self.BLACK, 
@@ -190,15 +206,8 @@ class MainMenu:
                         
                     if self.start_button.collidepoint(event.pos):
                         if self.input_text.strip():
-                            game = Game()
-                            game.start()
-                            if self.input_text.strip():
-                                game = Game()
-                                final_score = game.start()  # Modifique o método `start` para retornar a pontuação final.
-                                self.save_score(self.input_text.strip(), final_score)  # Salvar o nickname e a pontuação.
-                            else:
-                                self.show_warning = True
-                                self.warning_timer = pygame.time.get_ticks()
+                            final_score = self.start_game()
+                            self.save_score(self.input_text.strip(), final_score)
                         else:
                             self.show_warning = True
                             self.warning_timer = pygame.time.get_ticks()
@@ -208,7 +217,9 @@ class MainMenu:
                 
                 if event.type == pygame.KEYDOWN and self.input_active:
                     if event.key == pygame.K_RETURN:
-                        print(f"Nickname: {self.input_text}")
+                        if self.input_text.strip():
+                            final_score = self.start_game()
+                            self.save_score(self.input_text.strip(), final_score)
                     elif event.key == pygame.K_BACKSPACE:
                         self.input_text = self.input_text[:-1]
                     else:
@@ -216,3 +227,8 @@ class MainMenu:
                             self.input_text += event.unicode
             
             pygame.display.flip()
+            clock.tick(60)
+
+if __name__ == '__main__':
+    menu = MainMenu()
+    menu.run()
