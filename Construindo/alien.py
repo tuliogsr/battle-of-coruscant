@@ -5,7 +5,7 @@ class Alien(GameObject):
     """Classe para representar um alienígena."""
 
     def __init__(self, ai_settings, screen):
-        super(Alien, self).__init__('Assents/alien.bmp', screen)
+        super(Alien, self).__init__('Assents/alien.png', screen)
         self.ai_settings = ai_settings
 
         # Posição inicial do alienígena.

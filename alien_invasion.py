@@ -8,11 +8,14 @@ from Recorde.scoreboard import Scoreboard
 from Configs.button import Button
 from Construindo.ship import Ship
 from Configs.game_functions import GameFunctions as gf
+import os
 
 class AlienInvasion:
     def __init__(self):
         """Initialize the game, and create game resources."""
         pygame.init()
+        # Centralize the game window
+        os.environ['SDL_VIDEO_CENTERED'] = '1'
         self.ai_settings = Settings()
         self.screen = pygame.display.set_mode(
             (self.ai_settings.screen_width, self.ai_settings.screen_height))
@@ -90,8 +93,8 @@ class MainMenu:
         pygame.init()
         
         # Configurações de tela
-        self.screen_width = 1000
-        self.screen_height = 560
+        self.screen_width = 1280
+        self.screen_height = 720
         self.screen = pygame.display.set_mode((self.screen_width, self.screen_height))
         pygame.display.set_caption("Battle of Coruscant - Menu Principal")
         

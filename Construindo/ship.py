@@ -6,7 +6,7 @@ class Ship(GameObject):
     """Classe para representar a nave do jogador."""
 
     def __init__(self, ai_settings, screen):
-        super(Ship, self).__init__('Assents/ship.bmp', screen)
+        super(Ship, self).__init__('Assents/ship.png', screen)
         self.ai_settings = ai_settings
 
         # Configuração inicial da nave.
