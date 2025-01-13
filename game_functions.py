@@ -3,6 +3,7 @@ from time import sleep
 import pygame
 from bullet import Bullet
 from alien import Alien
+import json
 
 class GameFunctions:
     @staticmethod
@@ -245,3 +246,22 @@ class GameFunctions:
         for row_number in range(number_rows):
             for alien_number in range(number_aliens_x):
                 GameFunctions.create_alien(ai_settings, screen, aliens, alien_number, row_number)
+
+    @staticmethod
+    def save_score(nickname, score):
+        """Save the player's score."""
+        file_name = "player_scores.json"
+        try:
+            with open(file_name, "r") as file:
+                data = json.load(file)
+        except (FileNotFoundError, json.JSONDecodeError):
+            data = {}
+
+        if nickname in data:
+            if score > data[nickname]:
+                data[nickname] = score
+        else:
+            data[nickname] = score
+
+        with open(file_name, "w") as file:
+            json.dump(data, file, indent=4)

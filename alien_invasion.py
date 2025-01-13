@@ -46,6 +46,9 @@ class AlienInvasion:
             
             gf.update_screen(self.ai_settings, self.screen, self.stats, self.sb, self.ship, self.aliens, self.bullets, self.play_button)
 
+            if not self.stats.game_active and self.stats.score > 0:
+                gf.save_score(self.stats.nickname, self.stats.score)
+
 class MainMenu:
     def __init__(self):
         pygame.init()
@@ -175,6 +178,7 @@ class MainMenu:
 
     def start_game(self):
         ai = AlienInvasion()
+        ai.stats.nickname = self.input_text.strip()
         ai.run_game()
         return ai.stats.score
     
