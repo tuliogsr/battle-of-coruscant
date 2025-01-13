@@ -45,6 +45,16 @@ class GameFunctions:
         """Start a new game when the player clicks Play."""
         button_clicked = play_button.rect.collidepoint(mouse_x, mouse_y)
         if button_clicked and not stats.game_active:
+            # Contagem regressiva de 5 a 0
+            for i in range(5, 0, -1):
+                screen.fill(ai_settings.bg_color)
+                font = pygame.font.SysFont(None, 74)
+                countdown_text = font.render(str(i), True, (255, 0, 0))
+                countdown_rect = countdown_text.get_rect(center=screen.get_rect().center)
+                screen.blit(countdown_text, countdown_rect)
+                pygame.display.flip()
+                sleep(1)
+
             # Reset the game settings.
             ai_settings.initialize_dynamic_settings()
 
