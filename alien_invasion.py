@@ -85,6 +85,7 @@ class MainMenu:
         self.input_box = pygame.Rect(self.screen_width // 2 - 150, self.screen_height // 2 + 50, 300, 40)
         self.start_button = pygame.Rect(self.screen_width // 2 - 150, self.screen_height // 2 + 120, 300, 50)
         self.exit_button = pygame.Rect(self.screen_width // 2 - 150, self.screen_height // 2 + 200, 300, 50)
+        self.high_score_button = pygame.Rect(self.screen_width // 2 - 150, self.screen_height // 2 + 280, 300, 50)
         
         # Configuração da caixa de entrada do nickname
         self.input_text = ""
@@ -190,6 +191,7 @@ class MainMenu:
             
             self.draw_input_box()
             self.draw_button("Iniciar Jogo", self.start_button, self.ORANGE)
+            self.draw_button("Recordes", self.high_score_button, self.ORANGE)
             self.draw_button("Sair", self.exit_button, self.ORANGE)
             self.draw_warning()
 
@@ -211,6 +213,30 @@ class MainMenu:
                         else:
                             self.show_warning = True
                             self.warning_timer = pygame.time.get_ticks()
+
+                    elif self.high_score_button.collidepoint(event.pos):
+                        high_scores = []
+                        try:
+                            with open("player_scores.json", "r") as file:
+                                data = json.load(file)
+                                for name, score in data.items():
+                                    high_scores.append((name, score))
+                        except (FileNotFoundError, json.JSONDecodeError):
+                            pass
+                        
+                        high_scores.sort(key=lambda x: x[1], reverse=True)
+                        
+                        self.screen.fill(self.BLACK)
+                        self.draw_text("Recordes", self.title_font, self.ORANGE, self.screen, self.screen_width // 2, 50)
+                        y = 100
+                        for i, (name, score) in enumerate(high_scores[:10], 1):
+                            text = f"{i}. {name}: {score}"
+                            self.draw_text(text, self.button_font, self.WHITE, self.screen, self.screen_width // 2, y)
+                            y += 50
+                        pygame.display.flip()
+                        pygame.time.wait(5000)
+                        self.screen.blit(self.bg, (0, 0))
+
                     elif self.exit_button.collidepoint(event.pos):
                         pygame.quit()
                         sys.exit()
