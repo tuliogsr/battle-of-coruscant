@@ -90,6 +90,10 @@ class GameFunctions:
     @staticmethod
     def update_screen(ai_settings, screen, stats, sb, ship, aliens, bullets, play_button):
         """Update images on the screen, and flip to the new screen."""
+        # Desenhar a imagem de fundo
+        background_image = pygame.image.load('Assents/background.png')
+        screen.blit(background_image, (0, 0))
+
         # Redraw the screen, each pass through the loop.
         screen.fill(ai_settings.bg_color)
 

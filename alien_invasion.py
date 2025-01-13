@@ -37,6 +37,8 @@ class AlienInvasion:
         # Create the fleet of aliens.
         gf.create_fleet(self.ai_settings, self.screen, self.ship, self.aliens)
 
+        self.background_image = pygame.image.load('Assents/background.png')
+
     def run_game(self):
         """Start the main loop for the game."""
         while True:
@@ -127,7 +129,7 @@ class MainMenu:
         self.title_y = self.screen_height // 4
         
         # Definir posições dos botões
-        self.input_box = pygame.Rect(self.screen_width // 2 - 150, self.screen_height // 2 - 50, 300, 40)
+        self.input_box = pygame.Rect(self.screen_width // 2 - 200, self.screen_height // 2 - 50, 400, 40)
         self.start_button = pygame.Rect(self.screen_width // 2 - 150, self.screen_height // 2 + 40, 300, 50)
         self.high_score_button = pygame.Rect(self.screen_width // 2 - 150, self.screen_height // 2 + 120, 300, 50)
         self.exit_button = pygame.Rect(self.screen_width // 2 - 150, self.screen_height // 2 + 200, 300, 50)
@@ -135,7 +137,7 @@ class MainMenu:
         # Configuração da caixa de entrada do nickname
         self.input_text = ""
         self.input_active = False
-        self.placeholder = "Digite seu nome"
+        self.placeholder = "Digite seu Nickname"
         
         # Configuração do aviso
         self.show_warning = False
@@ -168,7 +170,7 @@ class MainMenu:
         if self.show_warning:
             current_time = pygame.time.get_ticks()
             if current_time - self.warning_timer < self.warning_duration:
-                warning_text = "Digite seu nome para começar!"
+                warning_text = "Digite seu Nickname!"
                 text_surface = self.warning_font.render(warning_text, True, self.RED)
                 text_rect = text_surface.get_rect(center=(self.screen_width // 2, self.input_box.y - 20))
                 self.screen.blit(text_surface, text_rect)
@@ -176,8 +178,10 @@ class MainMenu:
                 self.show_warning = False
     
     def draw_input_box(self):
+
+        self.input_box.height = 50
         border_color = self.RED if self.show_warning else self.WHITE
-        pygame.draw.rect(self.screen, border_color, self.input_box, border_radius=20)
+        pygame.draw.rect(self.screen, border_color, self.input_box, border_radius=30)
         
         if not self.input_text and not self.input_active:
             placeholder_surface = self.input_font.render(self.placeholder, True, self.GRAY)
