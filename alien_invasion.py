@@ -84,8 +84,8 @@ class MainMenu:
         # Definir posições dos botões
         self.input_box = pygame.Rect(self.screen_width // 2 - 150, self.screen_height // 2 + 50, 300, 40)
         self.start_button = pygame.Rect(self.screen_width // 2 - 150, self.screen_height // 2 + 120, 300, 50)
-        self.exit_button = pygame.Rect(self.screen_width // 2 - 150, self.screen_height // 2 + 200, 300, 50)
         self.high_score_button = pygame.Rect(self.screen_width // 2 - 150, self.screen_height // 2 + 280, 300, 50)
+        self.exit_button = pygame.Rect(self.screen_width // 2 - 150, self.screen_height // 2 + 200, 300, 50)
         
         # Configuração da caixa de entrada do nickname
         self.input_text = ""
