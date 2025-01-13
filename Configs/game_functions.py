@@ -119,6 +119,14 @@ class GameFunctions:
             stats.high_score = stats.score
             sb.prep_high_score()
             stats.save_high_score()
+            GameFunctions.save_high_score(stats.high_score)
+
+    @staticmethod
+    def save_high_score(high_score):
+        """Save the high score to a file."""
+        file_name = "Dados/high_score.json"
+        with open(file_name, "w") as file:
+            json.dump(high_score, file)
 
     @staticmethod
     def check_bullet_alien_collisions(ai_settings, screen, stats, sb, ship, aliens, bullets):
@@ -250,7 +258,7 @@ class GameFunctions:
     @staticmethod
     def save_score(nickname, score):
         """Save the player's score."""
-        file_name = "player_scores.json"
+        file_name = "Dados/player_scores.json"
         try:
             with open(file_name, "r") as file:
                 data = json.load(file)

@@ -160,7 +160,7 @@ class MainMenu:
                                (cursor_pos, self.input_box.y + self.input_box.height - 10))
 
     def save_score(self, nickname, score):
-        file_name = "player_scores.json"
+        file_name = "Dados/player_scores.json"
         try:
             with open(file_name, "r") as file:
                 data = json.load(file)
@@ -221,7 +221,7 @@ class MainMenu:
                     elif self.high_score_button.collidepoint(event.pos):
                         high_scores = []
                         try:
-                            with open("player_scores.json", "r") as file:
+                            with open("Dados/player_scores.json", "r") as file:
                                 data = json.load(file)
                                 for name, score in data.items():
                                     high_scores.append((name, score))

@@ -1,5 +1,6 @@
 import pygame.font
 from pygame.sprite import Group
+import json
 
 from Construindo.ship import Ship
 
@@ -22,6 +23,16 @@ class Scoreboard():
         self.prep_high_score()
         self.prep_level()
         self.prep_ships()
+        self.load_high_score()
+
+    def load_high_score(self):
+        """Load the high score from a file."""
+        file_name = "Dados/high_score.json"
+        try:
+            with open(file_name, "r") as file:
+                self.stats.high_score = json.load(file)
+        except (FileNotFoundError, json.JSONDecodeError):
+            self.stats.high_score = 0
 
     def prep_score(self):
         """Turn the score into a rendered image."""
